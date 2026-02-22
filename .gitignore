@@ -1,0 +1,36 @@
+# Python / venv
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# App runtime artifacts
+log.txt
+*.log
+answer_history.db
+*.db
+debug_screenshot.png
+test_screenshot.png
+screenshots/
+
+# Local secrets / config
+config.local.json
+
+# Build / packaging artifacts
+dist/
+build/
+*.spec
+*.toc
+*.pyz
+*.pkg
+*.exe
+*.zip
+
