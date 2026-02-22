@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "ai_provider": "deepseek",
+  "ai_providers": {
+    "deepseek": {
+      "api_key": "",
+      "base_url": "https://api.deepseek.com/v1/chat/completions",
+      "model": "deepseek-chat",
+      "temperature": 0.7,
+      "max_tokens": 10
+    }
+  },
+  "ocr": {
+    "language": "ch",
+    "use_angle_cls": true,
+    "use_gpu": false,
+    "fast_rec": {
+      "enabled": false,
+      "device": "gpu:0",
+      "model_name": "PP-OCRv4_mobile_rec",
+      "batch_size": 6,
+      "min_score": 0.5,
+      "rois": {
+        "title": { "x": 0.06, "y": 0.02, "w": 0.88, "h": 0.12 },
+        "question": { "x": 0.06, "y": 0.14, "w": 0.88, "h": 0.22 },
+        "A": { "x": 0.04, "y": 0.46, "w": 0.44, "h": 0.2 },
+        "B": { "x": 0.52, "y": 0.46, "w": 0.44, "h": 0.2 },
+        "C": { "x": 0.04, "y": 0.7, "w": 0.44, "h": 0.2 },
+        "D": { "x": 0.52, "y": 0.7, "w": 0.44, "h": 0.2 }
+      }
+    }
+  },
+  "screen": {
+    "capture_interval": 4.0,
+    "full_screen": true,
+    "save_screenshots": false,
+    "screenshot_path": "./screenshots"
+  },
+  "click": {
+    "delay_before_click": 0.5,
+    "delay_after_click": 1.0,
+    "click_duration": 0.1,
+    "offset_y": 20
+  },
+  "automation": {
+    "auto_retry": true,
+    "max_retry": 3,
+    "retry_delay": 1.0,
+    "question_detection_keywords": [
+      "题目一",
+      "题目二",
+      "题目三",
+      "题目四",
+      "题目五",
+      "题目六",
+      "题目七",
+      "题目八",
+      "题目九",
+      "题目十"
+    ],
+    "option_keywords": ["A", "B", "C", "D"]
+  },
+  "ui": {
+    "window_width": 800,
+    "window_height": 600,
+    "log_max_lines": 100
+  },
+  "capture_region": null
+}
+
