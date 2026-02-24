@@ -105,5 +105,31 @@
     "y": 440,
     "width": 708,
     "height": 397
+  },
+  "game_mode": "poetry",
+  "material_match": {
+    "grid_rows": 4,
+    "grid_cols": 4,
+    "target_score": 50,
+    "time_limit": 90,
+    "click_delay": 0.3,
+    "game_region": {
+      "x": 0.1,
+      "y": 0.2,
+      "w": 0.4,
+      "h": 0.5
+    },
+    "score_region": {
+      "x": 0.55,
+      "y": 0.2,
+      "w": 0.35,
+      "h": 0.3
+    },
+    "time_region": {
+      "x": 0.1,
+      "y": 0.75,
+      "w": 0.8,
+      "h": 0.1
+    }
   }
 }

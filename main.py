@@ -27,7 +27,10 @@ class MainWindow:
         """初始化主窗口"""
         self.root = tk.Tk()
         self.root.title("诗词答题自动化工具")
-        self.root.geometry("900x700")
+        # 只设置宽度，高度让窗口根据内容自适应
+        self.root.geometry("900x0")
+        # 设置最小尺寸，确保窗口不会太小
+        self.root.minsize(900, 600)
         self.root.resizable(True, True)
         
         # 设置窗口背景色
@@ -50,6 +53,7 @@ class MainWindow:
         self.ai_client = None
         self.click_handler = None
         self.database = None  # 延迟初始化数据库
+        self.material_matcher = None  # 材料匹配器
         
         # 识别区域坐标 (x, y, width, height)，None表示全屏
         self.capture_region = self.config.get('capture_region', None)
@@ -57,8 +61,23 @@ class MainWindow:
         # OCR 初始化状态
         self.ocr_initializing = False
         
+        # 游戏模式
+        self.game_mode = self.config.get('game_mode', 'poetry')
+        
+        # 根据游戏模式设置窗口标题
+        title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
+        self.root.title(title_text)
+        
         # 创建界面（先显示窗口，给用户快速响应）
         self.create_widgets()
+        
+        # 创建完所有组件后，让窗口根据内容自动调整大小
+        self.root.update_idletasks()
+        # 获取内容所需的最小尺寸
+        width = self.root.winfo_reqwidth()
+        height = self.root.winfo_reqheight()
+        # 设置窗口大小，确保所有内容都能显示
+        self.root.geometry(f"{width}x{height}")
         
         # 绑定窗口关闭事件
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -104,14 +123,43 @@ class MainWindow:
         title_frame.pack(fill=tk.X)
         title_frame.pack_propagate(False)
         
-        title_label = tk.Label(title_frame, text="📚 诗词答题自动化工具", 
+        title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
+        self.title_label = tk.Label(title_frame, text=title_text, 
                               font=('Microsoft YaHei UI', 16, 'bold'),
                               bg='#2c3e50', fg='white')
-        title_label.pack(pady=15)
+        self.title_label.pack(pady=15)
+        
+        # 游戏模式选择（放在最上面，横跨整个宽度）
+        mode_container = tk.Frame(self.root, bg='#f0f0f0')
+        mode_container.pack(fill=tk.X, padx=15, pady=(10, 5))
+        
+        mode_frame = ttk.LabelFrame(mode_container, text="🎯 游戏模式", padding=15)
+        mode_frame.pack(fill=tk.X)
+        
+        self.game_mode_var = tk.StringVar(value=self.game_mode)
+        
+        # 创建模式选择按钮容器，使用pack布局让按钮紧凑排列
+        mode_buttons_frame = tk.Frame(mode_frame, bg='white')
+        mode_buttons_frame.pack(fill=tk.X)
+        
+        # 定义游戏模式列表（方便后续扩展）
+        game_modes = [
+            ("📚 诗词答题", "poetry"),
+            ("🔮 材料匹配", "material"),
+        ]
+        
+        # 动态创建模式选择按钮，使用pack布局让它们紧凑排列
+        for idx, (text, value) in enumerate(game_modes):
+            radio = ttk.Radiobutton(mode_buttons_frame, text=text, 
+                                   variable=self.game_mode_var, 
+                                   value=value,
+                                   command=self.on_game_mode_changed)
+            # 使用pack布局，减少间距，让按钮紧凑排列
+            radio.pack(side=tk.LEFT, padx=(10 if idx == 0 else 5), pady=5)
         
         # 主内容区域
         main_frame = tk.Frame(self.root, bg='#f0f0f0')
-        main_frame.pack(fill=tk.BOTH, expand=True, padx=15, pady=10)
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=15, pady=(5, 10))
         
         # 左侧：状态和按钮区域
         left_frame = tk.Frame(main_frame, bg='#f0f0f0')
@@ -325,6 +373,19 @@ class MainWindow:
         if answer:
             self.answer_label.config(text=answer, fg='#e74c3c')
         self.root.update_idletasks()
+    
+    def on_game_mode_changed(self):
+        """游戏模式改变时的回调"""
+        new_mode = self.game_mode_var.get()
+        self.game_mode = new_mode
+        self.config.set('game_mode', new_mode)
+        self.config.save_config()
+        mode_name = "诗词答题" if new_mode == "poetry" else "材料匹配"
+        # 更新标题
+        title_text = "📚 诗词答题自动化工具" if new_mode == "poetry" else "🔮 材料匹配自动化工具"
+        self.title_label.config(text=title_text)
+        self.root.title(title_text)
+        self.log_message(f"游戏模式已切换为: {mode_name}")
     
     def check_config(self):
         """检查配置有效性"""
@@ -852,25 +913,29 @@ class MainWindow:
     
     def start_automation(self):
         """启动自动化流程"""
-        # 检查配置
-        is_valid, error = self.config.validate()
-        if not is_valid:
-            messagebox.showerror("错误", f"配置无效: {error}\n请先配置API Key")
-            return
+        # 获取当前游戏模式
+        current_mode = self.game_mode_var.get() if hasattr(self, 'game_mode_var') else self.game_mode
+        
+        # 诗词答题模式需要检查API Key配置
+        if current_mode == "poetry":
+            is_valid, error = self.config.validate()
+            if not is_valid:
+                messagebox.showerror("错误", f"配置无效: {error}\n请先配置API Key")
+                return
+            
+            # 如果OCR引擎未初始化，在后台线程中初始化
+            if self.ocr_engine is None:
+                if self.ocr_initializing:
+                    self.log_message("OCR正在初始化中，请稍候...")
+                    return
+                self.log_message("开始运行，正在初始化OCR模块...")
+                self.update_status("初始化中...", "", "")
+                # 在后台线程中初始化OCR（不阻塞UI）
+                init_thread = threading.Thread(target=self._init_ocr_engine, daemon=True)
+                init_thread.start()
         
         if self.is_running:
             return
-        
-        # 如果OCR引擎未初始化，在后台线程中初始化
-        if self.ocr_engine is None:
-            if self.ocr_initializing:
-                self.log_message("OCR正在初始化中，请稍候...")
-                return
-            self.log_message("开始运行，正在初始化OCR模块...")
-            self.update_status("初始化中...", "", "")
-            # 在后台线程中初始化OCR（不阻塞UI）
-            init_thread = threading.Thread(target=self._init_ocr_engine, daemon=True)
-            init_thread.start()
         
         self.is_running = True
         self.stop_flag = False
@@ -903,6 +968,18 @@ class MainWindow:
     
     def automation_loop(self):
         """自动化循环（在工作线程中运行）"""
+        # 根据游戏模式选择不同的处理逻辑
+        current_mode = self.game_mode_var.get() if hasattr(self, 'game_mode_var') else self.game_mode
+        
+        if current_mode == "material":
+            # 材料匹配游戏模式
+            self.material_match_loop()
+        else:
+            # 诗词答题模式（原有逻辑）
+            self.poetry_quiz_loop()
+    
+    def poetry_quiz_loop(self):
+        """诗词答题自动化循环"""
         # 等待OCR引擎初始化完成（如果正在初始化）
         if self.ocr_engine is None:
             self.root.after(0, lambda: self.log_message("等待OCR模块初始化..."))
@@ -1046,12 +1123,52 @@ class MainWindow:
 
                 if not fast_used:
                     ocr_results = self.ocr_engine.recognize(image)
+                else:
+                    # fast_rec模式下，先检查fast_rec返回的文本
+                    ocr_results = []
+                
                 perf["ocr"] = time.perf_counter() - ocr_perf0
                 t1 = time.time()
                 n = len(ocr_results)
                 self.root.after(0, lambda n=n, dt=f"{t1-t0:.2f}": self.log_message(f"OCR识别完成，识别到 {n} 个文本区域 (耗时 {dt}s)"))
                 
                 if self.stop_flag: break
+                
+                # 检查是否识别到"答对题目数"（游戏结束标识）
+                game_completed = False
+                
+                # 检查fast_rec返回的文本
+                if fast_used:
+                    last = getattr(self.ocr_engine, "fast_rec_last", {}) or {}
+                    texts = last.get("texts", {}) if isinstance(last, dict) else {}
+                    for key, text in texts.items():
+                        if text and "答对题目数" in text:
+                            game_completed = True
+                            self.root.after(0, lambda: self.log_message("检测到游戏完成标识：答对题目数"))
+                            break
+                    
+                    # fast_rec模式下，如果没检测到游戏结束标识，进行全流程OCR检测
+                    if not game_completed:
+                        self.root.after(0, lambda: self.log_message("fast_rec模式下，进行全流程OCR检测游戏结束标识..."))
+                        full_ocr_results = self.ocr_engine.recognize(image)
+                        for text, bbox in full_ocr_results:
+                            if "答对题目数" in text:
+                                game_completed = True
+                                self.root.after(0, lambda: self.log_message("检测到游戏完成标识：答对题目数"))
+                                break
+                
+                # 检查全流程OCR结果（非fast_rec模式）
+                if not game_completed and not fast_used:
+                    for text, bbox in ocr_results:
+                        if "答对题目数" in text:
+                            game_completed = True
+                            self.root.after(0, lambda: self.log_message("检测到游戏完成标识：答对题目数"))
+                            break
+                
+                if game_completed:
+                    self.root.after(0, lambda: self.log_message("游戏已完成，停止自动化"))
+                    self.root.after(0, lambda: self.stop_automation())
+                    break
                 
                 # 打印OCR识别到的前10条文本，方便调试
                 for i, (text, bbox) in enumerate(ocr_results[:10]):
@@ -1203,6 +1320,95 @@ class MainWindow:
                     break
         
         self.root.after(0, lambda: self.log_message("自动化流程已停止"))
+    
+    def material_match_loop(self):
+        """材料匹配游戏自动化循环"""
+        # 初始化材料匹配器
+        if self.material_matcher is None:
+            from material_matcher import MaterialMatcher
+            material_config = self.config.get('material_match', {})
+            self.material_matcher = MaterialMatcher(self.config)
+            self.material_matcher.set_config(material_config)
+            self.root.after(0, lambda: self.log_message("材料匹配器初始化完成"))
+        
+        # 初始化截图和点击模块
+        if self.screen_capture is None:
+            from screen_capture import ScreenCapture
+            self.screen_capture = ScreenCapture()
+        
+        if self.click_handler is None:
+            from click_handler import ClickHandler
+            self.click_handler = ClickHandler(self.config)
+        
+        capture_interval = self.config.get('screen.capture_interval', 1.0)
+        click_delay = self.config.get('material_match.click_delay', 0.3)
+        
+        self.root.after(0, lambda: self.log_message("材料匹配游戏自动化已启动"))
+        
+        while self.is_running and not self.stop_flag:
+            try:
+                # 截图
+                if self.capture_region:
+                    r = self.capture_region
+                    image = self.screen_capture.capture_region(r['x'], r['y'], r['width'], r['height'])
+                else:
+                    image = self.screen_capture.capture_full_screen()
+                
+                if self.stop_flag:
+                    break
+                
+                # 获取游戏状态
+                game_state = self.material_matcher.get_game_state(image)
+                
+                # 检查游戏是否结束
+                if game_state.get("is_game_over", False):
+                    self.root.after(0, lambda: self.log_message("游戏已结束"))
+                    break
+                
+                # 识别材料
+                materials = game_state.get("materials")
+                if materials is None or len(materials) == 0:
+                    self.root.after(0, lambda: self.log_message("未识别到材料，等待..."))
+                    time.sleep(capture_interval)
+                    continue
+                
+                # 找到最佳匹配对
+                best_pair = self.material_matcher.find_best_match(materials)
+                
+                if best_pair is None:
+                    self.root.after(0, lambda: self.log_message("未找到匹配的材料对"))
+                    time.sleep(capture_interval)
+                    continue
+                
+                # 获取点击位置
+                pos1, pos2 = self.material_matcher.get_click_positions(best_pair, image)
+                
+                # 点击第一个材料
+                self.root.after(0, lambda p=pos1: self.log_message(f"点击材料1: {p}"))
+                self.click_handler.click(pos1[0], pos1[1])
+                time.sleep(click_delay)
+                
+                if self.stop_flag:
+                    break
+                
+                # 点击第二个材料
+                self.root.after(0, lambda p=pos2: self.log_message(f"点击材料2: {p}"))
+                self.click_handler.click(pos2[0], pos2[1])
+                
+                # 等待匹配完成
+                time.sleep(click_delay * 2)
+                
+                # 等待下一轮
+                for _ in range(int(capture_interval / 0.2)):
+                    if self.stop_flag:
+                        break
+                    time.sleep(0.2)
+                
+            except Exception as e:
+                self.root.after(0, lambda err=str(e): self.log_message(f"材料匹配发生错误: {err}"))
+                time.sleep(1.0)
+        
+        self.root.after(0, lambda: self.log_message("材料匹配自动化流程已停止"))
     
     def on_closing(self):
         """窗口关闭事件处理"""
