@@ -100,19 +100,29 @@
     "window_height": 600,
     "log_max_lines": 100
   },
-  "capture_region": {
-    "x": 917,
-    "y": 440,
-    "width": 708,
-    "height": 397
-  },
   "game_mode": "poetry",
+  "poetry_quiz": {
+    "capture_region": {
+      "x": 917,
+      "y": 440,
+      "width": 708,
+      "height": 397
+    }
+  },
   "material_match": {
-    "grid_rows": 4,
-    "grid_cols": 4,
+    "capture_region": {
+      "x": 400,
+      "y": 296,
+      "width": 1733,
+      "height": 864
+    },
+    "grid_rows": 5,
+    "grid_cols": 10,
     "target_score": 50,
     "time_limit": 90,
-    "click_delay": 0.3,
+    "click_delay": 0.1,
+    "batch_click_pairs": 0,
+    "rescan_each_pair": false,
     "game_region": {
       "x": 0.1,
       "y": 0.2,
@@ -130,6 +140,22 @@
       "y": 0.75,
       "w": 0.8,
       "h": 0.1
+    },
+    "contour_match": {
+      "enabled": false,
+      "similarity_threshold": 0.3,
+      "min_contour_area": 100,
+      "use_hu_moments": true
+    },
+    "fingerprint_match": {
+      "enabled": true,
+      "dh_bits": 64,
+      "hamming_threshold": 10,
+      "color_weight": 0.3,
+      "hash_weight": 0.7,
+      "min_group_size": 2,
+      "auto_collect": true,
+      "verify_empty_after_click": true
     }
   }
 }

@@ -18,7 +18,7 @@ class Config:
         return cls._instance
     
     def __init__(self):
-        if self._config_data is None:
+        if Config._config_data is None:  # 使用类变量
             # 方案A：优先读取本地私有配置 config.local.json（不提交到 GitHub）
             # 也可通过环境变量 ITEM_CONFIG_PATH 指定任意路径
             env_path = os.environ.get("ITEM_CONFIG_PATH", "").strip()
@@ -35,23 +35,23 @@ class Config:
         try:
             if os.path.exists(self.config_path):
                 with open(self.config_path, 'r', encoding='utf-8') as f:
-                    self._config_data = json.load(f)
+                    Config._config_data = json.load(f)  # 使用类变量
             else:
                 # 如果配置文件不存在，使用默认配置
-                self._config_data = self._get_default_config()
+                Config._config_data = self._get_default_config()  # 使用类变量
                 self.save_config()
         except json.JSONDecodeError as e:
             print(f"配置文件格式错误: {e}")
-            self._config_data = self._get_default_config()
+            Config._config_data = self._get_default_config()  # 使用类变量
         except Exception as e:
             print(f"加载配置文件失败: {e}")
-            self._config_data = self._get_default_config()
+            Config._config_data = self._get_default_config()  # 使用类变量
     
     def save_config(self):
         """保存配置到文件"""
         try:
             with open(self.config_path, 'w', encoding='utf-8') as f:
-                json.dump(self._config_data, f, ensure_ascii=False, indent=2)
+                json.dump(Config._config_data, f, ensure_ascii=False, indent=2)  # 使用类变量
         except Exception as e:
             print(f"保存配置文件失败: {e}")
     
@@ -60,11 +60,11 @@ class Config:
         获取配置项
         支持点号分隔的嵌套键，如 'ai_providers.deepseek.api_key'
         """
-        if self._config_data is None:
+        if Config._config_data is None:  # 使用类变量
             return default
         
         keys = key.split('.')
-        value = self._config_data
+        value = Config._config_data  # 使用类变量
         
         try:
             for k in keys:
@@ -78,11 +78,11 @@ class Config:
         设置配置项
         支持点号分隔的嵌套键，如 'ai_providers.deepseek.api_key'
         """
-        if self._config_data is None:
-            self._config_data = {}
+        if Config._config_data is None:  # 使用类变量
+            Config._config_data = {}  # 使用类变量
         
         keys = key.split('.')
-        config = self._config_data
+        config = Config._config_data  # 使用类变量
         
         # 创建嵌套字典结构
         for k in keys[:-1]:
@@ -99,7 +99,7 @@ class Config:
         验证配置有效性
         返回: (是否有效, 错误信息)
         """
-        if self._config_data is None:
+        if Config._config_data is None:  # 使用类变量
             return False, "配置数据为空"
         
         # 检查AI提供商配置

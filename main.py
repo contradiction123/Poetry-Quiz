@@ -55,14 +55,15 @@ class MainWindow:
         self.database = None  # 延迟初始化数据库
         self.material_matcher = None  # 材料匹配器
         
+        # 游戏模式（先初始化，再加载对应的区域配置）
+        self.game_mode = self.config.get('game_mode', 'poetry')
+        
         # 识别区域坐标 (x, y, width, height)，None表示全屏
-        self.capture_region = self.config.get('capture_region', None)
+        # 根据游戏模式从对应配置中加载
+        self._load_capture_region()
         
         # OCR 初始化状态
         self.ocr_initializing = False
-        
-        # 游戏模式
-        self.game_mode = self.config.get('game_mode', 'poetry')
         
         # 根据游戏模式设置窗口标题
         title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
@@ -85,8 +86,31 @@ class MainWindow:
         # 初始化日志
         self.log_message("程序启动")
         
+        # 初始化全局快捷键监听（F9键终止运行）
+        self._init_global_hotkey()
+        
         # 在后台线程中初始化数据库和检查配置（不阻塞UI）
         threading.Thread(target=self._init_background, daemon=True).start()
+    
+    def _init_global_hotkey(self):
+        """初始化全局快捷键（F9键终止运行）"""
+        try:
+            import keyboard
+            # 注册F9键为全局快捷键，用于终止运行
+            keyboard.on_press_key('f9', lambda _: self._on_emergency_stop())
+            self.root.after(0, lambda: self.log_message("全局快捷键已启用：按 F9 键可紧急终止运行"))
+        except ImportError:
+            self.root.after(0, lambda: self.log_message("警告：keyboard库未安装，全局快捷键功能不可用。请运行: pip install keyboard"))
+        except Exception as e:
+            self.root.after(0, lambda err=str(e): self.log_message(f"全局快捷键初始化失败: {err}"))
+    
+    def _on_emergency_stop(self):
+        """紧急停止处理（由全局快捷键触发）"""
+        if self.is_running:
+            self.root.after(0, lambda: self.log_message("⚠️ 检测到 F9 键，正在紧急停止..."))
+            self.stop_automation()
+        else:
+            self.root.after(0, lambda: self.log_message("程序未运行，无需停止"))
     
     def _init_background(self):
         """后台初始化（不阻塞UI）"""
@@ -123,11 +147,20 @@ class MainWindow:
         title_frame.pack(fill=tk.X)
         title_frame.pack_propagate(False)
         
+        # 左侧：标题
         title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
         self.title_label = tk.Label(title_frame, text=title_text, 
                               font=('Microsoft YaHei UI', 16, 'bold'),
                               bg='#2c3e50', fg='white')
-        self.title_label.pack(pady=15)
+        self.title_label.pack(side=tk.LEFT, padx=15, pady=15)
+        
+        # 右侧：F9紧急终止提示（醒目位置）
+        emergency_title_label = tk.Label(title_frame,
+                                        text="⚠️ 紧急终止：按 F9 键可随时强制停止运行 ⚠️",
+                                        font=('Microsoft YaHei UI', 11, 'bold'),
+                                        bg='#e74c3c', fg='white',
+                                        padx=15, pady=8)
+        emergency_title_label.pack(side=tk.RIGHT, padx=15, pady=10)
         
         # 游戏模式选择（放在最上面，横跨整个宽度）
         mode_container = tk.Frame(self.root, bg='#f0f0f0')
@@ -337,6 +370,15 @@ class MainWindow:
         self.log_text.tag_add(tag_name, start_pos, end_pos)
         self.log_text.tag_config(tag_name, foreground=color)
         
+        # 同步写入 log.txt 文件
+        try:
+            log_file_path = "log.txt"
+            with open(log_file_path, 'a', encoding='utf-8') as f:
+                f.write(log_entry)
+        except Exception as e:
+            # 如果写入失败，不影响主程序运行
+            print(f"写入日志文件失败: {e}")
+        
         self.log_text.see(tk.END)
         
         # 限制日志行数
@@ -380,12 +422,56 @@ class MainWindow:
         self.game_mode = new_mode
         self.config.set('game_mode', new_mode)
         self.config.save_config()
+        
+        # 切换模式时，重新加载对应的截图区域
+        self._load_capture_region()
+        self._update_region_label()
+        
         mode_name = "诗词答题" if new_mode == "poetry" else "材料匹配"
         # 更新标题
         title_text = "📚 诗词答题自动化工具" if new_mode == "poetry" else "🔮 材料匹配自动化工具"
         self.title_label.config(text=title_text)
         self.root.title(title_text)
         self.log_message(f"游戏模式已切换为: {mode_name}")
+    
+    def _load_capture_region(self):
+        """根据当前游戏模式加载对应的截图区域配置"""
+        if self.game_mode == 'poetry':
+            poetry_config = self.config.get('poetry_quiz', {})
+            self.capture_region = poetry_config.get('capture_region', None)
+        elif self.game_mode == 'material':
+            material_config = self.config.get('material_match', {})
+            self.capture_region = material_config.get('capture_region', None)
+        else:
+            self.capture_region = None
+    
+    def _save_capture_region(self):
+        """根据当前游戏模式保存截图区域配置到对应的配置位置"""
+        if self.game_mode == 'poetry':
+            poetry_config = self.config.get('poetry_quiz', {})
+            if self.capture_region:
+                poetry_config['capture_region'] = self.capture_region
+            else:
+                poetry_config.pop('capture_region', None)
+            self.config.set('poetry_quiz', poetry_config)
+        elif self.game_mode == 'material':
+            material_config = self.config.get('material_match', {})
+            if self.capture_region:
+                material_config['capture_region'] = self.capture_region
+            else:
+                material_config.pop('capture_region', None)
+            self.config.set('material_match', material_config)
+        self.config.save_config()
+    
+    def _update_region_label(self):
+        """更新区域标签显示"""
+        if self.capture_region:
+            r = self.capture_region
+            self.region_label.config(
+                text=f"已设置 ({r['x']},{r['y']}) {r['width']}x{r['height']}",
+                fg='#27ae60')
+        else:
+            self.region_label.config(text="全屏", fg='#f39c12')
     
     def check_config(self):
         """检查配置有效性"""
@@ -629,12 +715,11 @@ class MainWindow:
                 'width': width,
                 'height': height
             }
-            self.config.set('capture_region', self.capture_region)
+            # 根据当前游戏模式保存到对应的配置位置
+            self._save_capture_region()
             
             # 更新UI
-            self.region_label.config(
-                text=f"已设置 ({x1},{y1}) {width}x{height}",
-                fg='#27ae60')
+            self._update_region_label()
             
             overlay.destroy()
             self.root.deiconify()
@@ -654,8 +739,9 @@ class MainWindow:
     def clear_capture_region(self):
         """清除识别区域，恢复全屏模式"""
         self.capture_region = None
-        self.config.set('capture_region', None)
-        self.region_label.config(text="全屏", fg='#f39c12')
+        # 根据当前游戏模式保存到对应的配置位置
+        self._save_capture_region()
+        self._update_region_label()
         self.log_message("已恢复全屏截图模式")
     
     def update_statistics(self):
@@ -913,6 +999,15 @@ class MainWindow:
     
     def start_automation(self):
         """启动自动化流程"""
+        # 清空 log.txt 文件
+        try:
+            log_file_path = "log.txt"
+            with open(log_file_path, 'w', encoding='utf-8') as f:
+                f.write("")  # 清空文件
+            self.log_message("日志文件已清空，开始新的运行记录")
+        except Exception as e:
+            self.log_message(f"清空日志文件失败: {e}")
+        
         # 获取当前游戏模式
         current_mode = self.game_mode_var.get() if hasattr(self, 'game_mode_var') else self.game_mode
         
@@ -985,9 +1080,12 @@ class MainWindow:
             self.root.after(0, lambda: self.log_message("等待OCR模块初始化..."))
             timeout = 60  # 最多等待60秒
             elapsed = 0
-            while self.ocr_engine is None and elapsed < timeout:
+            while self.ocr_engine is None and elapsed < timeout and not self.stop_flag:
                 time.sleep(0.5)
                 elapsed += 0.5
+            if self.stop_flag:
+                self.root.after(0, lambda: self.log_message("检测到停止信号，终止OCR初始化等待"))
+                return
             if self.ocr_engine is None:
                 self.root.after(0, lambda: self.log_message("OCR模块初始化超时"))
                 self.root.after(0, lambda: self.stop_automation())
@@ -1326,10 +1424,48 @@ class MainWindow:
         # 初始化材料匹配器
         if self.material_matcher is None:
             from material_matcher import MaterialMatcher
-            material_config = self.config.get('material_match', {})
             self.material_matcher = MaterialMatcher(self.config)
-            self.material_matcher.set_config(material_config)
-            self.root.after(0, lambda: self.log_message("材料匹配器初始化完成"))
+        
+        # 每次启动时重新加载配置（确保配置更新生效）
+        # 重新加载配置以确保最新
+        self.config.load_config()
+        
+        # 调试：检查配置数据
+        config_data = Config._config_data  # 直接访问类变量
+        print(f"[main.py] 使用的配置文件: {self.config.config_path}")
+        print(f"[main.py] Config._config_data is None: {config_data is None}")
+        if config_data is not None:
+            print(f"[main.py] Config._config_data keys: {list(config_data.keys())}")
+            print(f"[main.py] 'material_match' in _config_data: {'material_match' in config_data}")
+            if 'material_match' in config_data:
+                print(f"[main.py] _config_data['material_match']: {config_data['material_match']}")
+        
+        material_config = self.config.get('material_match', {})
+        # 如果 material_config 为空，尝试从 config.json 直接读取
+        if not material_config and os.path.exists('config.json'):
+            try:
+                import json
+                with open('config.json', 'r', encoding='utf-8') as f:
+                    direct_config = json.load(f)
+                    if 'material_match' in direct_config:
+                        material_config = direct_config['material_match']
+                        print(f"[main.py] 从 config.json 直接读取 material_match 配置")
+            except Exception as e:
+                print(f"[main.py] 从 config.json 读取失败: {e}")
+        
+        # 调试：打印配置内容
+        print(f"[main.py] material_config keys: {list(material_config.keys()) if material_config else 'EMPTY'}")
+        print(f"[main.py] material_config: {material_config}")
+        if 'contour_match' in material_config:
+            print(f"[main.py] contour_match: {material_config['contour_match']}")
+            print(f"[main.py] contour_match.enabled: {material_config['contour_match'].get('enabled', 'NOT FOUND')}")
+        else:
+            print(f"[main.py] contour_match NOT FOUND in material_config")
+        self.material_matcher.set_config(material_config)
+        if self.material_matcher.contour_match_enabled:
+            self.root.after(0, lambda: self.log_message(f"材料匹配器已初始化，轮廓匹配已启用（相似度阈值: {self.material_matcher.contour_similarity_threshold}）"))
+        else:
+            self.root.after(0, lambda: self.log_message("材料匹配器已初始化，使用颜色哈希匹配模式"))
         
         # 初始化截图和点击模块
         if self.screen_capture is None:
@@ -1341,9 +1477,29 @@ class MainWindow:
             self.click_handler = ClickHandler(self.config)
         
         capture_interval = self.config.get('screen.capture_interval', 1.0)
-        click_delay = self.config.get('material_match.click_delay', 0.3)
+        # 点击间隔（秒）：每一次 click 之间的等待时间（材料匹配专用，覆盖全局配置）
+        click_delay = self.config.get('material_match.click_delay', 0.1)
+        # 临时禁用 click_handler 的延迟（材料匹配模式需要快速点击）
+        original_delay_before = self.config.get('click.delay_before_click', 0.5)
+        original_delay_after = self.config.get('click.delay_after_click', 1.0)
+        # 在材料匹配模式下，使用更短的延迟
+        self.config.set('click.delay_before_click', 0.0)  # 点击前不延迟
+        self.config.set('click.delay_after_click', 0.0)   # 点击后不延迟（由 click_delay 控制）
+        # 重新初始化 click_handler 以应用新的延迟配置
+        if self.click_handler:
+            from click_handler import ClickHandler
+            self.click_handler = ClickHandler(self.config)
+        # 一次识别后连续点击的对数
+        # 0 表示不限：一轮识别后一直点击到找不到匹配为止
+        batch_click_pairs = self.config.get('material_match.batch_click_pairs', 0)
+        # 是否每点击一对就重新截图识别（默认 False：一轮识别后连续点击）
+        rescan_each_pair = self.config.get('material_match.rescan_each_pair', False)
         
         self.root.after(0, lambda: self.log_message("材料匹配游戏自动化已启动"))
+        self.root.after(0, lambda: self.log_message("提示：按 F9 键可紧急终止运行"))
+        
+        no_match_count = 0  # 连续未找到匹配对的次数
+        max_no_match_retries = 5  # 最大连续未找到匹配对的次数
         
         while self.is_running and not self.stop_flag:
             try:
@@ -1357,56 +1513,230 @@ class MainWindow:
                 if self.stop_flag:
                     break
                 
-                # 获取游戏状态
-                game_state = self.material_matcher.get_game_state(image)
+                # 获取游戏状态（传入日志回调函数）
+                def log_callback(msg):
+                    self.root.after(0, lambda m=msg: self.log_message(f"[材料识别] {m}"))
+                
+                self.root.after(0, lambda: self.log_message("开始识别材料..."))
+                # 判断是否为区域截图
+                is_region_capture = self.capture_region is not None
+                if is_region_capture:
+                    self.root.after(0, lambda: self.log_message(f"使用区域截图模式，区域: {self.capture_region}"))
+                game_state = self.material_matcher.get_game_state(image, log_callback, is_region_capture)
                 
                 # 检查游戏是否结束
                 if game_state.get("is_game_over", False):
                     self.root.after(0, lambda: self.log_message("游戏已结束"))
                     break
                 
+                if self.stop_flag:
+                    break
+                
                 # 识别材料
                 materials = game_state.get("materials")
-                if materials is None or len(materials) == 0:
-                    self.root.after(0, lambda: self.log_message("未识别到材料，等待..."))
+                if materials is None:
+                    self.root.after(0, lambda: self.log_message("材料识别失败，等待重试..."))
                     time.sleep(capture_interval)
                     continue
-                
-                # 找到最佳匹配对
-                best_pair = self.material_matcher.find_best_match(materials)
-                
-                if best_pair is None:
-                    self.root.after(0, lambda: self.log_message("未找到匹配的材料对"))
-                    time.sleep(capture_interval)
-                    continue
-                
-                # 获取点击位置
-                pos1, pos2 = self.material_matcher.get_click_positions(best_pair, image)
-                
-                # 点击第一个材料
-                self.root.after(0, lambda p=pos1: self.log_message(f"点击材料1: {p}"))
-                self.click_handler.click(pos1[0], pos1[1])
-                time.sleep(click_delay)
                 
                 if self.stop_flag:
                     break
                 
-                # 点击第二个材料
-                self.root.after(0, lambda p=pos2: self.log_message(f"点击材料2: {p}"))
-                self.click_handler.click(pos2[0], pos2[1])
+                if len(materials) == 0:
+                    self.root.after(0, lambda: self.log_message("未识别到任何材料，可能游戏未开始或区域设置不正确"))
+                    self.root.after(0, lambda: self.log_message("提示：请确保游戏已开始，并且游戏区域设置正确"))
+                    time.sleep(capture_interval)
+                    continue
                 
-                # 等待匹配完成
-                time.sleep(click_delay * 2)
+                # 过滤掉已点击的位置（避免重复点击）
+                if not hasattr(self, '_clicked_positions'):
+                    self._clicked_positions = set()  # 已点击的位置集合
                 
-                # 等待下一轮
-                for _ in range(int(capture_interval / 0.2)):
+                # 使用当前截图检查已点击位置是否真的为空（使用同一张截图，确保一致性）
+                if self._clicked_positions:
+                    game_image = self.material_matcher.extract_game_region(image, is_region_capture)
+                    for pos in list(self._clicked_positions):
+                        cell_img = self.material_matcher.extract_cell_image(pos[0], pos[1], game_image)
+                        if self.material_matcher.is_cell_empty(cell_img, threshold=0.8):
+                            # 仍然为空，保持 in _clicked_positions
+                            pass
+                        else:
+                            # 不为空了，说明可能重新出现了物品，从集合中移除
+                            self._clicked_positions.discard(pos)
+                            self.root.after(0, lambda p=pos: self.log_message(f"[校验] 位置 {p} 已重新出现物品，从已点击集合中移除"))
+                
+                # 将已点击位置传递给识别器，让它在识别时直接跳过这些位置
+                self.material_matcher._clicked_positions_for_recognition = self._clicked_positions.copy()
+                
+                # 从识别结果中排除已点击的位置（双重保险）
+                filtered_materials = {pos: hash_val for pos, hash_val in materials.items() 
+                                    if pos not in self._clicked_positions}
+                
+                if len(filtered_materials) == 0:
+                    self.root.after(0, lambda: self.log_message(f"所有位置都已点击过，等待新物品出现... (已点击位置数: {len(self._clicked_positions)})"))
+                    time.sleep(capture_interval)
+                    continue
+                
+                if len(filtered_materials) < len(materials):
+                    self.root.after(0, lambda: self.log_message(f"过滤掉 {len(materials) - len(filtered_materials)} 个已点击位置，剩余 {len(filtered_materials)} 个材料"))
+                
+                if self.stop_flag:
+                    break
+                
+                # 找到最佳匹配对
+                self.root.after(0, lambda: self.log_message(f"开始查找匹配对，当前材料数量: {len(filtered_materials)}"))
+                
+                def match_log_callback(msg):
+                    self.root.after(0, lambda m=msg: self.log_message(f"[匹配] {m}"))
+
+                # 批量点击：一轮识别后连续点击多对（坐标不失效时更快）
+                remaining = dict(filtered_materials)
+                clicked = 0
+                max_clicks_in_batch = batch_click_pairs if batch_click_pairs > 0 else 999  # 0表示不限，设为很大的数
+                
+                while clicked < max_clicks_in_batch and not self.stop_flag:
+                    # 如果 remaining 为空或少于2个，说明本轮已点击完所有配对
+                    if len(remaining) < 2:
+                        if clicked > 0:
+                            self.root.after(0, lambda c=clicked: self.log_message(f"本轮已点击 {c} 对，剩余材料不足2个，准备重新识别"))
+                        break
+                    
                     if self.stop_flag:
                         break
-                    time.sleep(0.2)
+                    
+                    best_pair = self.material_matcher.find_best_match(remaining, match_log_callback)
+                    
+                    # 如果找不到匹配对，尝试渐进式增大阈值（最多尝试3次）
+                    if best_pair is None and len(remaining) >= 2:
+                        # 渐进式阈值：15, 20, 25
+                        progressive_thresholds = [15, 20, 25]
+                        for temp_threshold in progressive_thresholds:
+                            if temp_threshold <= self.material_matcher.fingerprint_hamming_threshold:
+                                continue  # 如果临时阈值小于等于当前阈值，跳过
+                            self.root.after(0, lambda t=temp_threshold: self.log_message(f"[渐进匹配] 尝试增大阈值到 {t} 重新匹配..."))
+                            best_pair = self.material_matcher.find_best_match(remaining, match_log_callback, temp_threshold=temp_threshold)
+                            if best_pair is not None:
+                                self.root.after(0, lambda t=temp_threshold: self.log_message(f"[渐进匹配] 使用阈值 {t} 找到匹配对"))
+                                break
+                    
+                    if best_pair is None:
+                        if clicked == 0:
+                            no_match_count += 1
+                            self.root.after(0, lambda: self.log_message(f"未找到匹配的材料对 (连续{no_match_count}次)"))
+                            use_contour = self.material_matcher.contour_match_enabled
+                            if use_contour:
+                                self.root.after(0, lambda: self.log_message("可能原因：1. 没有相同的材料 2. 轮廓相似度超过阈值 3. 轮廓提取不准确"))
+                                self.root.after(0, lambda t=self.material_matcher.contour_similarity_threshold: self.log_message(f"当前相似度阈值: {t}，可尝试增大阈值"))
+                            else:
+                                self.root.after(0, lambda: self.log_message("可能原因：1. 没有相同的材料 2. 材料识别不准确 3. 指纹匹配阈值过严"))
+                                self.root.after(0, lambda t=self.material_matcher.fingerprint_hamming_threshold: self.log_message(f"当前指纹汉明阈值: {t}，已尝试渐进式增大阈值"))
+                            
+                            # 连续多次找不到匹配对，等待更长时间
+                            if no_match_count >= max_no_match_retries:
+                                self.root.after(0, lambda: self.log_message(f"连续{no_match_count}次未找到匹配对，等待{2.0}秒后重新识别"))
+                                time.sleep(2.0)
+                                no_match_count = 0  # 重置计数器
+                        else:
+                            no_match_count = 0  # 成功点击过，重置计数器
+                            self.root.after(0, lambda c=clicked: self.log_message(f"本轮已点击 {c} 对，未找到更多匹配对，准备重新识别"))
+                        break
+                    
+                    # 检查配对中是否包含已点击位置（双重保险）
+                    if best_pair[0] in self._clicked_positions or best_pair[1] in self._clicked_positions:
+                        self.root.after(0, lambda p=best_pair: self.log_message(f"[警告] 配对 {p} 包含已点击位置，跳过并继续查找"))
+                        # 从 remaining 中移除这两个位置，继续查找下一个配对
+                        remaining.pop(best_pair[0], None)
+                        remaining.pop(best_pair[1], None)
+                        continue
+
+                    total_str = "不限" if batch_click_pairs <= 0 else str(batch_click_pairs)
+                    self.root.after(
+                        0,
+                        lambda p=best_pair, idx=clicked + 1, t=total_str: self.log_message(f"找到匹配对({idx}/{t}): {p[0]} <-> {p[1]}")
+                    )
+
+                    if self.stop_flag:
+                        break
+                    
+                    # 获取点击位置
+                    def coord_log_callback(msg):
+                        self.root.after(0, lambda m=msg: self.log_message(m))
+                    pos1, pos2 = self.material_matcher.get_click_positions(best_pair, image, is_region_capture, coord_log_callback)
+
+                    # 如果是区域截图，需要加上区域偏移
+                    if is_region_capture:
+                        offset_x = self.capture_region['x']
+                        offset_y = self.capture_region['y']
+                        self.root.after(0, lambda: self.log_message(f"[坐标计算] 区域截图模式，相对坐标: pos1={pos1}, pos2={pos2}"))
+                        self.root.after(0, lambda: self.log_message(f"[坐标计算] 加上区域偏移: ({offset_x}, {offset_y})"))
+                        pos1 = (pos1[0] + offset_x, pos1[1] + offset_y)
+                        pos2 = (pos2[0] + offset_x, pos2[1] + offset_y)
+                        self.root.after(0, lambda: self.log_message(f"[坐标计算] 最终屏幕坐标: pos1={pos1}, pos2={pos2}"))
+
+                    # 点击第一个材料
+                    self.root.after(0, lambda p=pos1: self.log_message(f"点击材料1: {p}"))
+                    self.click_handler.click(pos1[0], pos1[1])
+                    # 点击间隔（配置值，默认0.1秒）
+                    time.sleep(click_delay)
+
+                    if self.stop_flag:
+                        break
+
+                    # 点击第二个材料
+                    self.root.after(0, lambda p=pos2: self.log_message(f"点击材料2: {p}"))
+                    self.click_handler.click(pos2[0], pos2[1])
+                    
+                    # 点击后立即从 remaining 移除，避免重复匹配
+                    remaining.pop(best_pair[0], None)
+                    remaining.pop(best_pair[1], None)
+                    
+                    # 不校验空格（提高效率），直接加入已点击集合
+                    # 如果启用校验，会在下一轮识别时自动检查
+                    self._clicked_positions.add(best_pair[0])
+                    self._clicked_positions.add(best_pair[1])
+                    
+                    clicked += 1
+                    no_match_count = 0  # 成功点击，重置计数器
+                    
+                    # 两次点击之间的间隔（配置值）
+                    time.sleep(click_delay)
+
+                    # 你如果想每对都重新识别（更稳但更慢），打开这个开关
+                    if rescan_each_pair:
+                        break
+
+                # 如果开启每对重扫，则走默认节奏；否则一轮批量后再等一会进入下一轮识别
+                if rescan_each_pair:
+                    time.sleep(capture_interval)
+                    continue
+
+                if self.stop_flag:
+                    break
+                
+                # 批量点击完成后，短暂等待后重新识别（减少等待时间，提高效率）
+                # 只等待一小段时间，让游戏状态稳定，而不是等待 capture_interval（通常是4秒）
+                if no_match_count > 0:
+                    # 如果之前找不到匹配对，等待更长时间
+                    wait_time = min(1.0 + no_match_count * 0.5, 3.0)  # 最多等待3秒
+                    self.root.after(0, lambda t=wait_time: self.log_message(f"等待 {t:.1f} 秒后重新识别..."))
+                    # 在等待期间也要检查stop_flag
+                    elapsed = 0.0
+                    check_interval = 0.1
+                    while elapsed < wait_time and not self.stop_flag:
+                        time.sleep(min(check_interval, wait_time - elapsed))
+                        elapsed += check_interval
+                else:
+                    time.sleep(0.2)  # 固定等待0.2秒，让消除动画完成
                 
             except Exception as e:
                 self.root.after(0, lambda err=str(e): self.log_message(f"材料匹配发生错误: {err}"))
                 time.sleep(1.0)
+        
+        # 恢复 click_handler 的延迟配置
+        self.config.set('click.delay_before_click', original_delay_before)
+        self.config.set('click.delay_after_click', original_delay_after)
+        from click_handler import ClickHandler
+        self.click_handler = ClickHandler(self.config)
         
         self.root.after(0, lambda: self.log_message("材料匹配自动化流程已停止"))
     
