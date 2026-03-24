@@ -54,6 +54,7 @@ class MainWindow:
         self.click_handler = None
         self.database = None  # 延迟初始化数据库
         self.material_matcher = None  # 材料匹配器
+        self.fishing_automation = None  # 钓鱼自动化器
         
         # 游戏模式（先初始化，再加载对应的区域配置）
         self.game_mode = self.config.get('game_mode', 'poetry')
@@ -66,7 +67,12 @@ class MainWindow:
         self.ocr_initializing = False
         
         # 根据游戏模式设置窗口标题
-        title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
+        title_map = {
+            "poetry": "📚 诗词答题自动化工具",
+            "material": "🔮 材料匹配自动化工具",
+            "fishing": "🎣 钓鱼游戏自动化工具"
+        }
+        title_text = title_map.get(self.game_mode, "自动化工具")
         self.root.title(title_text)
         
         # 创建界面（先显示窗口，给用户快速响应）
@@ -148,7 +154,12 @@ class MainWindow:
         title_frame.pack_propagate(False)
         
         # 左侧：标题
-        title_text = "📚 诗词答题自动化工具" if self.game_mode == "poetry" else "🔮 材料匹配自动化工具"
+        title_map = {
+            "poetry": "📚 诗词答题自动化工具",
+            "material": "🔮 材料匹配自动化工具",
+            "fishing": "🎣 钓鱼游戏自动化工具"
+        }
+        title_text = title_map.get(self.game_mode, "自动化工具")
         self.title_label = tk.Label(title_frame, text=title_text, 
                               font=('Microsoft YaHei UI', 16, 'bold'),
                               bg='#2c3e50', fg='white')
@@ -179,6 +190,7 @@ class MainWindow:
         game_modes = [
             ("📚 诗词答题", "poetry"),
             ("🔮 材料匹配", "material"),
+            ("🎣 钓鱼游戏", "fishing"),
         ]
         
         # 动态创建模式选择按钮，使用pack布局让它们紧凑排列
@@ -427,9 +439,20 @@ class MainWindow:
         self._load_capture_region()
         self._update_region_label()
         
-        mode_name = "诗词答题" if new_mode == "poetry" else "材料匹配"
+        mode_name_map = {
+            "poetry": "诗词答题",
+            "material": "材料匹配",
+            "fishing": "钓鱼游戏"
+        }
+        mode_name = mode_name_map.get(new_mode, new_mode)
+        
         # 更新标题
-        title_text = "📚 诗词答题自动化工具" if new_mode == "poetry" else "🔮 材料匹配自动化工具"
+        title_map = {
+            "poetry": "📚 诗词答题自动化工具",
+            "material": "🔮 材料匹配自动化工具",
+            "fishing": "🎣 钓鱼游戏自动化工具"
+        }
+        title_text = title_map.get(new_mode, "自动化工具")
         self.title_label.config(text=title_text)
         self.root.title(title_text)
         self.log_message(f"游戏模式已切换为: {mode_name}")
@@ -442,6 +465,14 @@ class MainWindow:
         elif self.game_mode == 'material':
             material_config = self.config.get('material_match', {})
             self.capture_region = material_config.get('capture_region', None)
+        elif self.game_mode == 'fishing':
+            fishing_config = self.config.get('fishing_game', {})
+            fishing_region = fishing_config.get('capture_region', None)
+            # 如果配置为全屏（width/height为0或很大），则设为None
+            if fishing_region and fishing_region.get('width', 0) > 100 and fishing_region.get('height', 0) > 100:
+                self.capture_region = fishing_region
+            else:
+                self.capture_region = None
         else:
             self.capture_region = None
     
@@ -461,6 +492,13 @@ class MainWindow:
             else:
                 material_config.pop('capture_region', None)
             self.config.set('material_match', material_config)
+        elif self.game_mode == 'fishing':
+            fishing_config = self.config.get('fishing_game', {})
+            if self.capture_region:
+                fishing_config['capture_region'] = self.capture_region
+            else:
+                fishing_config.pop('capture_region', None)
+            self.config.set('fishing_game', fishing_config)
         self.config.save_config()
     
     def _update_region_label(self):
@@ -1069,6 +1107,9 @@ class MainWindow:
         if current_mode == "material":
             # 材料匹配游戏模式
             self.material_match_loop()
+        elif current_mode == "fishing":
+            # 钓鱼游戏模式
+            self.fishing_loop()
         else:
             # 诗词答题模式（原有逻辑）
             self.poetry_quiz_loop()
@@ -1739,6 +1780,111 @@ class MainWindow:
         self.click_handler = ClickHandler(self.config)
         
         self.root.after(0, lambda: self.log_message("材料匹配自动化流程已停止"))
+    
+    def fishing_loop(self):
+        """钓鱼游戏自动化循环"""
+        # 初始化钓鱼自动化器
+        if self.fishing_automation is None:
+            from fishing import FishingAutomation
+            fishing_config = self.config.get('fishing_game', {})
+            self.fishing_automation = FishingAutomation(fishing_config)
+            
+            # 设置日志回调
+            def log_callback(msg):
+                self.root.after(0, lambda m=msg: self.log_message(f"[钓鱼] {m}"))
+            self.fishing_automation.set_log_callback(log_callback)
+            
+            # 设置鱼竿和鱼钩等级
+            rod_level = fishing_config.get('rod_level', 3)
+            hook_level = fishing_config.get('hook_level', 1)
+            self.fishing_automation.set_rod_level(rod_level)
+            self.fishing_automation.set_hook_level(hook_level)
+        
+        # 初始化截图和点击模块
+        if self.screen_capture is None:
+            from screen_capture import ScreenCapture
+            self.screen_capture = ScreenCapture()
+        
+        if self.click_handler is None:
+            from click_handler import ClickHandler
+            self.click_handler = ClickHandler(self.config)
+        
+        capture_interval = self.config.get('screen.capture_interval', 1.0)
+        
+        self.root.after(0, lambda: self.log_message("钓鱼游戏自动化已启动"))
+        self.root.after(0, lambda: self.log_message("提示：按 F9 键可紧急终止运行"))
+        
+        last_cast_time = 0
+        cast_cooldown = 2.0  # 放钩冷却时间（秒）
+        
+        while self.is_running and not self.stop_flag:
+            try:
+                # 截图
+                if self.capture_region:
+                    r = self.capture_region
+                    image = self.screen_capture.capture_region(r['x'], r['y'], r['width'], r['height'])
+                else:
+                    image = self.screen_capture.capture_full_screen()
+                
+                if self.stop_flag:
+                    break
+                
+                # 获取游戏状态
+                is_region_capture = self.capture_region is not None
+                game_state = self.fishing_automation.get_game_state(image, is_region_capture)
+                
+                # 做出决策
+                decision = self.fishing_automation.make_decision(game_state)
+                
+                if decision:
+                    action = decision.get('action')
+                    reason = decision.get('reason', '')
+                    
+                    self.root.after(0, lambda r=reason: self.log_message(f"决策: {r}"))
+                    
+                    if action == 'cast':
+                        # 检查冷却时间
+                        current_time = time.time()
+                        if current_time - last_cast_time < cast_cooldown:
+                            self.root.after(0, lambda: self.log_message(f"放钩冷却中，等待 {cast_cooldown - (current_time - last_cast_time):.1f} 秒"))
+                            time.sleep(0.5)
+                            continue
+                        
+                        # 获取鱼竿图标位置
+                        icon_pos = self.fishing_automation.get_fishing_icon_position(image)
+                        
+                        if icon_pos:
+                            # 如果是区域截图，需要加上区域偏移
+                            if is_region_capture:
+                                offset_x = self.capture_region['x']
+                                offset_y = self.capture_region['y']
+                                icon_pos = (icon_pos[0] + offset_x, icon_pos[1] + offset_y)
+                            
+                            self.root.after(0, lambda p=icon_pos: self.log_message(f"点击鱼竿图标: {p}"))
+                            self.click_handler.click(icon_pos[0], icon_pos[1])
+                            last_cast_time = current_time
+                            
+                            # 记录决策数据
+                            target_info = decision.get('target')
+                            if target_info:
+                                result = {
+                                    'success': False,  # 暂时未知，等待后续检测
+                                    'score_gained': 0,
+                                    'time_taken': 0,
+                                    'fish_caught': 0
+                                }
+                                # 这里可以记录决策，但结果需要等待后续检测
+                        else:
+                            self.root.after(0, lambda: self.log_message("警告：未找到鱼竿图标位置"))
+                
+                # 等待一段时间后继续
+                time.sleep(capture_interval)
+                
+            except Exception as e:
+                self.root.after(0, lambda err=str(e): self.log_message(f"钓鱼游戏发生错误: {err}"))
+                time.sleep(1.0)
+        
+        self.root.after(0, lambda: self.log_message("钓鱼游戏自动化流程已停止"))
     
     def on_closing(self):
         """窗口关闭事件处理"""

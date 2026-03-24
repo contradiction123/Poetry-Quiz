@@ -1,0 +1,898 @@
+{
+  "9aa105a3": {
+    "fingerprint": {
+      "dhash": "1110001011001110100111010011101101001110010110000111000011000000",
+      "color": [
+        12,
+        11,
+        11
+      ],
+      "edge_density": 0.11100760751436112,
+      "area": 12882
+    },
+    "image_file": "./material_templates\\images\\9aa105a3.png",
+    "first_seen": "2026-02-24T15:07:29.952869",
+    "count": 2,
+    "last_updated": "2026-02-24T15:07:29.952876"
+  },
+  "c7b278cf": {
+    "fingerprint": {
+      "dhash": "1010000000110110010011110111010100011110100011001110010111110011",
+      "color": [
+        10,
+        9,
+        10
+      ],
+      "edge_density": 0.13375252290017078,
+      "area": 12882
+    },
+    "image_file": "./material_templates\\images\\c7b278cf.png",
+    "first_seen": "2026-02-24T15:07:29.956604",
+    "count": 6,
+    "last_updated": "2026-02-24T15:47:59.001653"
+  },
+  "1558f3f7": {
+    "fingerprint": {
+      "dhash": "1100011010001011100011010010011101010111011010110110110110110110",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.11512187548517311,
+      "area": 12882
+    },
+    "image_file": "./material_templates\\images\\1558f3f7.png",
+    "first_seen": "2026-02-24T15:07:29.969142",
+    "count": 4,
+    "last_updated": "2026-02-24T15:15:04.328401"
+  },
+  "2d24d5bf": {
+    "fingerprint": {
+      "dhash": "0011110001101110011100110111100100111101100110010100011110110100",
+      "color": [
+        10,
+        11,
+        11
+      ],
+      "edge_density": 0.10682393709182994,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\2d24d5bf.png",
+    "first_seen": "2026-02-24T15:10:25.800914",
+    "count": 6,
+    "last_updated": "2026-02-24T15:20:52.118281"
+  },
+  "ff99f256": {
+    "fingerprint": {
+      "dhash": "1101000000101100001011000110010100111100000011001100110111100110",
+      "color": [
+        10,
+        9,
+        10
+      ],
+      "edge_density": 0.12624760393945403,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\ff99f256.png",
+    "first_seen": "2026-02-24T15:10:25.819801",
+    "count": 4,
+    "last_updated": "2026-02-24T15:20:52.162633"
+  },
+  "6f4b547b": {
+    "fingerprint": {
+      "dhash": "0011000001110000000110101001110011001110110010011100101111001110",
+      "color": [
+        12,
+        11,
+        11
+      ],
+      "edge_density": 0.08077202723246744,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\6f4b547b.png",
+    "first_seen": "2026-02-24T15:10:25.849669",
+    "count": 12,
+    "last_updated": "2026-02-24T16:11:42.588514"
+  },
+  "4a58c81f": {
+    "fingerprint": {
+      "dhash": "0010000000101100100111110001001100001011100100111000001100011101",
+      "color": [
+        10,
+        9,
+        9
+      ],
+      "edge_density": 0.12215113954418233,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\4a58c81f.png",
+    "first_seen": "2026-02-24T15:10:25.870468",
+    "count": 2,
+    "last_updated": "2026-02-24T15:10:25.870472"
+  },
+  "a20dab22": {
+    "fingerprint": {
+      "dhash": "1110001110010111000100100011101010010100100001010000100100111011",
+      "color": [
+        10,
+        9,
+        8
+      ],
+      "edge_density": 0.1681993869119019,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\a20dab22.png",
+    "first_seen": "2026-02-24T15:10:25.887136",
+    "count": 4,
+    "last_updated": "2026-02-24T15:15:04.507253"
+  },
+  "f07ad284": {
+    "fingerprint": {
+      "dhash": "1110011100000011000110010011100100101011001001100001111011011010",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.15372211771029293,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\f07ad284.png",
+    "first_seen": "2026-02-24T15:15:04.347771",
+    "count": 2,
+    "last_updated": "2026-02-24T15:15:04.347776"
+  },
+  "ceba8c35": {
+    "fingerprint": {
+      "dhash": "1110100010001110001011110010111100001111000110111000100011101000",
+      "color": [
+        10,
+        9,
+        10
+      ],
+      "edge_density": 0.1369555158966224,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\ceba8c35.png",
+    "first_seen": "2026-02-24T15:15:04.362457",
+    "count": 12,
+    "last_updated": "2026-02-24T16:05:09.216791"
+  },
+  "a53bd5e6": {
+    "fingerprint": {
+      "dhash": "1100001110011101000011010100000101111011001000110101011000101100",
+      "color": [
+        11,
+        10,
+        9
+      ],
+      "edge_density": 0.11805142441668319,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\a53bd5e6.png",
+    "first_seen": "2026-02-24T15:15:04.382137",
+    "count": 8,
+    "last_updated": "2026-02-24T16:11:42.406685"
+  },
+  "582e2067": {
+    "fingerprint": {
+      "dhash": "1110110011000100100101000010100100110111001011000100110000111000",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.13061008658867077,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\582e2067.png",
+    "first_seen": "2026-02-24T15:15:04.415298",
+    "count": 4,
+    "last_updated": "2026-02-24T15:20:52.140732"
+  },
+  "b1b68969": {
+    "fingerprint": {
+      "dhash": "1111010001001011011110001110000001111001001110111010011011110010",
+      "color": [
+        12,
+        11,
+        11
+      ],
+      "edge_density": 0.11115553778488604,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\b1b68969.png",
+    "first_seen": "2026-02-24T15:15:04.453143",
+    "count": 10,
+    "last_updated": "2026-02-24T16:11:42.573306"
+  },
+  "2fc03358": {
+    "fingerprint": {
+      "dhash": "1111001001100110001101101011011010010011000001010011100100110000",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.0684777579483112,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\2fc03358.png",
+    "first_seen": "2026-02-24T15:15:04.471718",
+    "count": 12,
+    "last_updated": "2026-02-24T16:11:42.336323"
+  },
+  "c1ccd6ed": {
+    "fingerprint": {
+      "dhash": "1110011011001011010100110101001100110110001011001001110111010011",
+      "color": [
+        12,
+        10,
+        11
+      ],
+      "edge_density": 0.10269225643076103,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\c1ccd6ed.png",
+    "first_seen": "2026-02-24T15:15:04.490809",
+    "count": 10,
+    "last_updated": "2026-02-24T16:05:09.200661"
+  },
+  "93641591": {
+    "fingerprint": {
+      "dhash": "1111001011100110110011101001100100011011010011100111100001110000",
+      "color": [
+        12,
+        11,
+        11
+      ],
+      "edge_density": 0.10615753698520591,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\93641591.png",
+    "first_seen": "2026-02-24T15:15:04.531603",
+    "count": 2,
+    "last_updated": "2026-02-24T15:15:04.531608"
+  },
+  "12cb2538": {
+    "fingerprint": {
+      "dhash": "1111000011101111100001011010100100001011000101110011110010110000",
+      "color": [
+        11,
+        11,
+        10
+      ],
+      "edge_density": 0.0902305744368919,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\12cb2538.png",
+    "first_seen": "2026-02-24T15:15:04.545935",
+    "count": 8,
+    "last_updated": "2026-02-24T16:11:42.633794"
+  },
+  "16d5af69": {
+    "fingerprint": {
+      "dhash": "0000011000100110100001110000110000010110001011100100011111010011",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.12856104170797805,
+      "area": 15129
+    },
+    "image_file": "./material_templates\\images\\16d5af69.png",
+    "first_seen": "2026-02-24T15:20:52.137816",
+    "count": 2,
+    "last_updated": "2026-02-24T15:20:52.137823"
+  },
+  "0004db6d": {
+    "fingerprint": {
+      "dhash": "1000110001100100011001000010010000100100100101101100101111100001",
+      "color": [
+        10,
+        11,
+        11
+      ],
+      "edge_density": 0.08709849393575902,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\0004db6d.png",
+    "first_seen": "2026-02-24T15:20:52.213557",
+    "count": 10,
+    "last_updated": "2026-02-24T16:11:42.525551"
+  },
+  "47521691": {
+    "fingerprint": {
+      "dhash": "1100011100000111001001110100001101100011011010110011111011110000",
+      "color": [
+        9,
+        9,
+        8
+      ],
+      "edge_density": 0.10435825669732107,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\47521691.png",
+    "first_seen": "2026-02-24T15:30:11.312562",
+    "count": 6,
+    "last_updated": "2026-02-24T15:47:59.076356"
+  },
+  "c5c48610": {
+    "fingerprint": {
+      "dhash": "1000011100010101001101100011010110100101000010010011101100111110",
+      "color": [
+        10,
+        9,
+        8
+      ],
+      "edge_density": 0.16830153184627789,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\c5c48610.png",
+    "first_seen": "2026-02-24T15:30:11.320003",
+    "count": 4,
+    "last_updated": "2026-02-24T16:05:09.248876"
+  },
+  "7d030c09": {
+    "fingerprint": {
+      "dhash": "1001001110011011000011100010001101111011010110110011001000001110",
+      "color": [
+        11,
+        10,
+        9
+      ],
+      "edge_density": 0.16427035743079818,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\7d030c09.png",
+    "first_seen": "2026-02-24T15:30:11.335731",
+    "count": 8,
+    "last_updated": "2026-02-24T16:11:42.458823"
+  },
+  "414a3fbc": {
+    "fingerprint": {
+      "dhash": "0011000001011100011001100111001101111001001110011000101101100110",
+      "color": [
+        10,
+        11,
+        11
+      ],
+      "edge_density": 0.10415833666533386,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\414a3fbc.png",
+    "first_seen": "2026-02-24T15:30:11.392682",
+    "count": 6,
+    "last_updated": "2026-02-24T16:11:42.476609"
+  },
+  "87586fcc": {
+    "fingerprint": {
+      "dhash": "1101001000011011001010010101000100101011000100010011011101011110",
+      "color": [
+        8,
+        8,
+        8
+      ],
+      "edge_density": 0.16313474610155937,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\87586fcc.png",
+    "first_seen": "2026-02-24T15:30:11.424165",
+    "count": 4,
+    "last_updated": "2026-02-24T15:35:07.420439"
+  },
+  "5951e4a0": {
+    "fingerprint": {
+      "dhash": "1110011001110110100101101000111000110111000011111101100011011000",
+      "color": [
+        11,
+        10,
+        11
+      ],
+      "edge_density": 0.09822737571638011,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\5951e4a0.png",
+    "first_seen": "2026-02-24T15:35:07.349845",
+    "count": 4,
+    "last_updated": "2026-02-24T16:11:42.619948"
+  },
+  "eca07732": {
+    "fingerprint": {
+      "dhash": "1001011000001100001001101000111000011110001101100000111001000110",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.12859446385380274,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\eca07732.png",
+    "first_seen": "2026-02-24T15:35:07.406986",
+    "count": 10,
+    "last_updated": "2026-02-24T16:11:42.493365"
+  },
+  "39aa4ac4": {
+    "fingerprint": {
+      "dhash": "0011000001011000001011100000110001011111001001010110001111110001",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.13007256113947863,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\39aa4ac4.png",
+    "first_seen": "2026-02-24T15:41:59.020489",
+    "count": 6,
+    "last_updated": "2026-02-24T16:11:42.371435"
+  },
+  "ef84312f": {
+    "fingerprint": {
+      "dhash": "1111000011001111001010110010101100010110010111100011100011100000",
+      "color": [
+        11,
+        11,
+        10
+      ],
+      "edge_density": 0.09036385445821671,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\ef84312f.png",
+    "first_seen": "2026-02-24T15:41:59.043755",
+    "count": 4,
+    "last_updated": "2026-02-24T15:47:58.959880"
+  },
+  "167a42c5": {
+    "fingerprint": {
+      "dhash": "1110101011001101100011010000100101101111001011001100110001010000",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.13128082100493135,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\167a42c5.png",
+    "first_seen": "2026-02-24T15:41:59.055995",
+    "count": 6,
+    "last_updated": "2026-02-24T16:11:42.557490"
+  },
+  "228a423f": {
+    "fingerprint": {
+      "dhash": "1111000011001011100100110010001101000011010001100010110010011000",
+      "color": [
+        12,
+        12,
+        12
+      ],
+      "edge_density": 0.05025530771298038,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\228a423f.png",
+    "first_seen": "2026-02-24T15:41:59.071574",
+    "count": 6,
+    "last_updated": "2026-02-24T16:11:42.541553"
+  },
+  "8f86880e": {
+    "fingerprint": {
+      "dhash": "1110011100010011101100110110101101000010001011100001011011010010",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.1512362268207471,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\8f86880e.png",
+    "first_seen": "2026-02-24T15:47:58.988679",
+    "count": 4,
+    "last_updated": "2026-02-24T16:12:18.688191"
+  },
+  "ef2839da": {
+    "fingerprint": {
+      "dhash": "1001011100111011010100110010101100100011001101110011111011011000",
+      "color": [
+        8,
+        8,
+        8
+      ],
+      "edge_density": 0.1609356257497001,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\ef2839da.png",
+    "first_seen": "2026-02-24T15:47:59.040900",
+    "count": 6,
+    "last_updated": "2026-02-24T16:11:42.441325"
+  },
+  "b56127cb": {
+    "fingerprint": {
+      "dhash": "1110011001110011110010111001001100010111110011111100100011001000",
+      "color": [
+        11,
+        10,
+        11
+      ],
+      "edge_density": 0.0977608956417433,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\b56127cb.png",
+    "first_seen": "2026-02-24T15:47:59.097992",
+    "count": 2,
+    "last_updated": "2026-02-24T15:47:59.097996"
+  },
+  "24428348": {
+    "fingerprint": {
+      "dhash": "1011000000110000010110000010111000001101000111110010010101100011",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.12741570038651207,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\24428348.png",
+    "first_seen": "2026-02-24T15:47:59.231651",
+    "count": 2,
+    "last_updated": "2026-02-24T15:47:59.231656"
+  },
+  "f89b3dce": {
+    "fingerprint": {
+      "dhash": "0000000000000000000000000000000010001000100000000010000000100000",
+      "color": [
+        3,
+        3,
+        3
+      ],
+      "edge_density": 0.009529521524723444,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\f89b3dce.png",
+    "first_seen": "2026-02-24T15:48:41.575070",
+    "count": 85,
+    "last_updated": "2026-02-24T15:49:55.191035"
+  },
+  "364735ca": {
+    "fingerprint": {
+      "dhash": "0000101100001011000000110000101100001011000001000000101100000011",
+      "color": [
+        2,
+        3,
+        4
+      ],
+      "edge_density": 0.019349637194302608,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\364735ca.png",
+    "first_seen": "2026-02-24T15:48:41.596359",
+    "count": 2,
+    "last_updated": "2026-02-24T15:48:41.596364"
+  },
+  "551d704a": {
+    "fingerprint": {
+      "dhash": "0100000000100000001000000010000001000000010000000100000001001000",
+      "color": [
+        3,
+        3,
+        4
+      ],
+      "edge_density": 0.02618952419032387,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\551d704a.png",
+    "first_seen": "2026-02-24T15:48:41.619367",
+    "count": 2,
+    "last_updated": "2026-02-24T15:48:41.619371"
+  },
+  "5880d2a5": {
+    "fingerprint": {
+      "dhash": "1100000000100000000000001000000000000000010001000010001001001101",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "edge_density": 0.03480247245364149,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\5880d2a5.png",
+    "first_seen": "2026-02-24T15:48:51.895214",
+    "count": 36,
+    "last_updated": "2026-02-24T15:49:10.960467"
+  },
+  "554276d4": {
+    "fingerprint": {
+      "dhash": "0000100100001001000010010000100100001001000010010000100100001001",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "edge_density": 0.028322004531520725,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\554276d4.png",
+    "first_seen": "2026-02-24T15:48:51.941494",
+    "count": 14,
+    "last_updated": "2026-02-24T15:49:55.232000"
+  },
+  "dce48aa0": {
+    "fingerprint": {
+      "dhash": "1001011010010110001010010010010001000000000000000000000000000000",
+      "color": [
+        2,
+        1,
+        1
+      ],
+      "edge_density": 0.04763504434291857,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\dce48aa0.png",
+    "first_seen": "2026-02-24T15:48:51.964258",
+    "count": 3,
+    "last_updated": "2026-02-24T15:48:51.964262"
+  },
+  "cd045131": {
+    "fingerprint": {
+      "dhash": "1001011010010110100100001001011010010010100101111001001110010010",
+      "color": [
+        3,
+        3,
+        3
+      ],
+      "edge_density": 0.03085432493669199,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\cd045131.png",
+    "first_seen": "2026-02-24T15:49:10.987916",
+    "count": 2,
+    "last_updated": "2026-02-24T15:49:10.987927"
+  },
+  "bb04a716": {
+    "fingerprint": {
+      "dhash": "1001000110010001100100011001000110010001100110011001101110011011",
+      "color": [
+        2,
+        2,
+        2
+      ],
+      "edge_density": 0.021324803411968546,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\bb04a716.png",
+    "first_seen": "2026-02-24T15:49:11.014414",
+    "count": 2,
+    "last_updated": "2026-02-24T15:49:11.014424"
+  },
+  "8b22fe5c": {
+    "fingerprint": {
+      "dhash": "1000000000000100000000000000100010100010000011010000110011110010",
+      "color": [
+        4,
+        4,
+        4
+      ],
+      "edge_density": 0.07800322493953238,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\8b22fe5c.png",
+    "first_seen": "2026-02-24T15:49:11.041944",
+    "count": 2,
+    "last_updated": "2026-02-24T15:49:11.041956"
+  },
+  "63137f92": {
+    "fingerprint": {
+      "dhash": "1100000000100000001000001100000000001001001001100000000100001001",
+      "color": [
+        5,
+        5,
+        5
+      ],
+      "edge_density": 0.028890083310937918,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\63137f92.png",
+    "first_seen": "2026-02-24T15:49:21.629253",
+    "count": 3,
+    "last_updated": "2026-02-24T15:49:21.629258"
+  },
+  "425b97af": {
+    "fingerprint": {
+      "dhash": "0000000000000000101000000000000000000000000000001001011001001000",
+      "color": [
+        5,
+        5,
+        5
+      ],
+      "edge_density": 0.03825136612021858,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\425b97af.png",
+    "first_seen": "2026-02-24T15:49:21.647889",
+    "count": 3,
+    "last_updated": "2026-02-24T15:49:21.647893"
+  },
+  "73baaf7c": {
+    "fingerprint": {
+      "dhash": "0000000000000000010010010000000010010000010000001000100001100110",
+      "color": [
+        5,
+        5,
+        5
+      ],
+      "edge_density": 0.027008868583714055,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\73baaf7c.png",
+    "first_seen": "2026-02-24T15:49:21.666250",
+    "count": 2,
+    "last_updated": "2026-02-24T15:49:21.666254"
+  },
+  "75baf15e": {
+    "fingerprint": {
+      "dhash": "0000000000000100000001000000010000000000000000000000000000000000",
+      "color": [
+        6,
+        7,
+        8
+      ],
+      "edge_density": 0.02707605482397205,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\75baf15e.png",
+    "first_seen": "2026-02-24T15:49:21.702054",
+    "count": 2,
+    "last_updated": "2026-02-24T15:49:21.702060"
+  },
+  "7a5630cc": {
+    "fingerprint": {
+      "dhash": "0110000001101100010011111110010100111100000010011110011111110110",
+      "color": [
+        10,
+        9,
+        10
+      ],
+      "edge_density": 0.12594962015193922,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\7a5630cc.png",
+    "first_seen": "2026-02-24T16:05:09.018738",
+    "count": 2,
+    "last_updated": "2026-02-24T16:05:09.018747"
+  },
+  "e57b3055": {
+    "fingerprint": {
+      "dhash": "1110011010011011001100110110001101010010011001100011110011110000",
+      "color": [
+        12,
+        12,
+        12
+      ],
+      "edge_density": 0.051599032518140284,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\e57b3055.png",
+    "first_seen": "2026-02-24T16:05:09.059851",
+    "count": 2,
+    "last_updated": "2026-02-24T16:05:09.059855"
+  },
+  "be4e0b25": {
+    "fingerprint": {
+      "dhash": "1001001000100011010001111100111001001101110011111100110011001000",
+      "color": [
+        11,
+        10,
+        10
+      ],
+      "edge_density": 0.10944638538027412,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\be4e0b25.png",
+    "first_seen": "2026-02-24T16:05:09.170005",
+    "count": 4,
+    "last_updated": "2026-02-24T16:11:42.389001"
+  },
+  "d56f4c36": {
+    "fingerprint": {
+      "dhash": "1110011010000111000001110010001100100011011001010011111110011100",
+      "color": [
+        9,
+        9,
+        8
+      ],
+      "edge_density": 0.11072292394517602,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\d56f4c36.png",
+    "first_seen": "2026-02-24T16:05:09.297963",
+    "count": 2,
+    "last_updated": "2026-02-24T16:05:09.297979"
+  },
+  "c8785882": {
+    "fingerprint": {
+      "dhash": "1110010011000111000100111010001101110011011001100010110000010110",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.15087298413967745,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\c8785882.png",
+    "first_seen": "2026-02-24T16:05:09.313255",
+    "count": 8,
+    "last_updated": "2026-02-24T16:12:14.892286"
+  },
+  "93df40e5": {
+    "fingerprint": {
+      "dhash": "0010100000111011000011110010111110010011000001100011101000110000",
+      "color": [
+        10,
+        9,
+        9
+      ],
+      "edge_density": 0.12315237839290513,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\93df40e5.png",
+    "first_seen": "2026-02-24T16:11:42.328146",
+    "count": 2,
+    "last_updated": "2026-02-24T16:11:42.328152"
+  },
+  "c2fd514d": {
+    "fingerprint": {
+      "dhash": "1100011011000011110000110111011000100110001011011001001111010110",
+      "color": [
+        11,
+        10,
+        11
+      ],
+      "edge_density": 0.10729642569201828,
+      "area": 14884
+    },
+    "image_file": "./material_templates\\images\\c2fd514d.png",
+    "first_seen": "2026-02-24T16:11:42.356359",
+    "count": 2,
+    "last_updated": "2026-02-24T16:11:42.356364"
+  },
+  "663b8fe1": {
+    "fingerprint": {
+      "dhash": "1100011010011010000110110110111101010111010100110100101010100110",
+      "color": [
+        10,
+        10,
+        10
+      ],
+      "edge_density": 0.10882313741170199,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\663b8fe1.png",
+    "first_seen": "2026-02-24T16:11:42.426834",
+    "count": 2,
+    "last_updated": "2026-02-24T16:11:42.426838"
+  },
+  "fc76394d": {
+    "fingerprint": {
+      "dhash": "1111000011001000100101100011001101011101000011111000111011110000",
+      "color": [
+        11,
+        12,
+        11
+      ],
+      "edge_density": 0.06570705051312808,
+      "area": 15006
+    },
+    "image_file": "./material_templates\\images\\fc76394d.png",
+    "first_seen": "2026-02-24T16:11:42.511600",
+    "count": 2,
+    "last_updated": "2026-02-24T16:11:42.511605"
+  }
+}

@@ -3,7 +3,7 @@
   "ai_provider": "deepseek",
   "ai_providers": {
     "deepseek": {
-      "api_key": "",
+      "api_key": "sk-59f6dbf88bd34664b0ff55b76fc27e85",
       "base_url": "https://api.deepseek.com/v1/chat/completions",
       "model": "deepseek-chat",
       "temperature": 0.7,
@@ -57,7 +57,8 @@
           "w": 0.44,
           "h": 0.2
         }
-      }
+      },
+      "device_used": "gpu:0"
     }
   },
   "screen": {
@@ -103,10 +104,10 @@
   "game_mode": "poetry",
   "poetry_quiz": {
     "capture_region": {
-      "x": 917,
-      "y": 440,
-      "width": 708,
-      "height": 397
+      "x": 776,
+      "y": 409,
+      "width": 954,
+      "height": 492
     }
   },
   "material_match": {
@@ -157,5 +158,96 @@
       "auto_collect": true,
       "verify_empty_after_click": true
     }
+  },
+  "fishing_game": {
+    "capture_region": {
+      "x": 0,
+      "y": 0,
+      "width": 1920,
+      "height": 1080
+    },
+    "rod_level": 3,
+    "hook_level": 1,
+    "hook_speed": 200,
+    "depth_weight": 0.7,
+    "size_weight": 0.3,
+    "fishing_icon_region": {
+      "x": 0.85,
+      "y": 0.85,
+      "width": 0.1,
+      "height": 0.1
+    },
+    "water_region": {
+      "x": 0.1,
+      "y": 0.3,
+      "width": 0.8,
+      "height": 0.6
+    },
+    "depth_zones": {
+      "level_1": {
+        "min": 0.0,
+        "max": 0.33,
+        "name": "浅层海域"
+      },
+      "level_2": {
+        "min": 0.33,
+        "max": 0.66,
+        "name": "中层海域"
+      },
+      "level_3": {
+        "min": 0.66,
+        "max": 1.0,
+        "name": "深层海域"
+      }
+    },
+    "fish_detection": {
+      "min_fish_area": 100,
+      "max_fish_area": 5000,
+      "color_ranges": {
+        "hue_min": 0,
+        "hue_max": 180,
+        "saturation_min": 50,
+        "saturation_max": 255,
+        "value_min": 50,
+        "value_max": 255
+      }
+    },
+    "hook_detection": {
+      "color_range": {
+        "brightness_min": 200,
+        "brightness_max": 255
+      },
+      "min_size": 10
+    },
+    "special_items": {
+      "scare_item_color": {
+        "hue_min": 100,
+        "hue_max": 130,
+        "saturation_min": 100,
+        "saturation_max": 255
+      },
+      "freeze_item_color": {
+        "hue_min": 100,
+        "hue_max": 130,
+        "brightness_min": 200
+      },
+      "debris": {
+        "seaweed_color": {
+          "hue_min": 40,
+          "hue_max": 80
+        },
+        "wood_color": {
+          "hue_min": 10,
+          "hue_max": 30
+        },
+        "avoid_if_low_level": true
+      }
+    },
+    "upgrade_tracking": {
+      "enabled": false,
+      "track_fish_count": true,
+      "target_upgrades": []
+    },
+    "database_path": "fishing_records.db"
   }
 }
